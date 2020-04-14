@@ -9,6 +9,7 @@ set USES_MAGISK_MODULE=
 
 set APKTOOL=Tools\APKTool
 set ZIPNAME=%APKNAME%_Mod
+set ZIP=Tools\7z\7za.exe
 
 if /I "%USES_MAGISK_MODULE%"=="yes" (set APKOUTPUT=%APKNAME%_Magisk\system\%APP_OR_PRIV-APP%\%APKNAME%) else (set APKOUTPUT=%APKNAME%_APK)
 
@@ -35,7 +36,7 @@ if /I "%USES_MAGISK_MODULE%"=="yes" (
 del %APKNAME%_Magisk\*.zip
 
 	:: Compress --> zip
-7z a %APKNAME%_Magisk\%ZIPNAME%.zip -xr!.git* -xr!LICENSE -r %APKNAME%_Magisk\* -mx9
+%ZIP% a %APKNAME%_Magisk\%ZIPNAME%.zip -xr!.git* -xr!LICENSE -r %APKNAME%_Magisk\* -mx9
 
 	:: Push zip to phone
 adb push %APKNAME%_Magisk\%ZIPNAME%.zip /sdcard/

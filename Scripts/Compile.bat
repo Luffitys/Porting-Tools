@@ -9,7 +9,7 @@ set USES_MAGISK_MODULE=
 
 set APKTOOL=Tools\APKTool
 set ZIPNAME=%APKNAME%_Mod
-set ZIP=Tools\7z\7za.exe
+set ZIP=Tools\7z\7z.exe
 
 if /I "%USES_MAGISK_MODULE%"=="yes" (set APKOUTPUT=%APKNAME%_Magisk\system\%APP_OR_PRIV-APP%\%APKNAME%) else (set APKOUTPUT=%APKNAME%_APK)
 

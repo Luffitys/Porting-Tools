@@ -5,7 +5,7 @@ set VENDOR=ROM\ROM\vendor
 set CLASSES=ROM\Classes
 set APKTOOL=Tools\APKTool
 set EXTRACTOR=Tools\Extractor
-set ZIP=Tools\7z\7za.exe
+set ZIP=Tools\7z\7z.exe
 
 @echo on
 

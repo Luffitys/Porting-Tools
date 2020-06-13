@@ -1,10 +1,9 @@
 @echo off
 
 
-	:: Enter "y" or leave blank
-set EXTRACT_VENDOR=y
-set INSTALL_FRAMEWORKS=y
-set EXTRACT_CLASSES=y
+set /p EXTRACT_VENDOR="Extract Vendor? (y/n): "
+set /p INSTALL_FRAMEWORKS="Install Frameworks? (y/n): "
+set /p EXTRACT_CLASSES="Extract Classes? (y/n): "
 
 
 set SYSTEM=ROM\ROM\system
@@ -15,35 +14,40 @@ set EXTRACTOR=Tools\Extractor
 set ZIP=Tools\7z\7z.exe
 
 
+	:: Extract System from .zip
 @echo on
 
-
-	:: Extract System from .zip
 cd ..
-%ZIP% x *.zip -oTEMP\ system.new.dat.br system.transfer.list
+
+
+%ZIP% x .\*.zip -oTEMP\ system.new.dat.br system.transfer.list -bse0 -bso0
 
 	:: Convert .dat.br -> .dat
 %Extractor%\Brotli.exe --decompress --in TEMP\system.new.dat.br --out TEMP\system.new.dat
 
 	:: Convert .dat -> .img
-%Extractor%\sdat2Img.exe TEMP\system.transfer.list TEMP\system.new.dat TEMP\system.img
+%Extractor%\sdat2Img.exe TEMP\system.transfer.list TEMP\system.new.dat TEMP\system.img >nul
 
-	:: Extract .img
-%ZIP% x -aos TEMP\system.img -o%SYSTEM%
+
+	:: Extract system.img
+%ZIP% x -aos TEMP\system.img -o%SYSTEM% -bse0 -bso0
 
 
 	:: Extract Vendor from .zip
 if /I "%EXTRACT_VENDOR%"=="y" (
-%ZIP% x *.zip -oTEMP\ vendor.new.dat.br vendor.transfer.list
+
+
+%ZIP% x *.zip -oTEMP\ vendor.new.dat.br vendor.transfer.list -bse0 -bso0
 
 	:: Convert .dat.br -> .dat
 %Extractor%\Brotli.exe --decompress --in TEMP\vendor.new.dat.br --out TEMP\vendor.new.dat
 
 	:: Convert .dat -> .img
-%Extractor%\sdat2Img.exe TEMP\vendor.transfer.list TEMP\vendor.new.dat TEMP\vendor.img
+%Extractor%\sdat2Img.exe TEMP\vendor.transfer.list TEMP\vendor.new.dat TEMP\vendor.img >nul
 
-	:: Extract .img
-%ZIP% x -aos TEMP\vendor.img -o%VENDOR%
+
+	:: Extract vendor.img
+%ZIP% x -aos TEMP\vendor.img -o%VENDOR% -bse0 -bso0
 
 )
 
@@ -59,24 +63,28 @@ java -jar %APKTOOL%\apktool.jar if %SYSTEM%\system\app\miui\miui.apk -p %APKTOOL
 
 java -jar %APKTOOL%\apktool.jar if %SYSTEM%\system\app\miuisystem\miuisystem.apk -p %APKTOOL%\Frameworks
 
+java -jar %APKTOOL%\apktool.jar if %SYSTEM%\system\priv-app\MiuiSystemUI\MiuiSystemUI.apk -p %APKTOOL%\Frameworks
+
 )
 
 
 	:: Extract Classes [Trial and Error]
 
+
 if /I "%EXTRACT_CLASSES%"=="y" (
 
+
 	:: miui.apk
-%ZIP% x %SYSTEM%\system\app\miui\miui.apk -oTEMP\miui *.dex
+%ZIP% x %SYSTEM%\system\app\miui\miui.apk -oTEMP\miui *.dex -bse0 -bso0
 
 	:: miuisystem.apk
-%ZIP% x %SYSTEM%\system\app\miuisystem\miuisystem.apk -oTEMP\miuisystem *.dex
+%ZIP% x %SYSTEM%\system\app\miuisystem\miuisystem.apk -oTEMP\miuisystem *.dex -bse0 -bso0
 
 	:: framework.jar
-%ZIP% x %SYSTEM%\system\framework\framework.jar -oTEMP\framework *.dex
+%ZIP% x %SYSTEM%\system\framework\framework.jar -oTEMP\framework *.dex -bse0 -bso0
 
 	:: gson.jar
-%ZIP% x %SYSTEM%\system\framework\gson.jar -oTEMP\gson *.dex
+%ZIP% x %SYSTEM%\system\framework\gson.jar -oTEMP\gson *.dex -bse0 -bso0
 
 
 	:: Decompile Classes

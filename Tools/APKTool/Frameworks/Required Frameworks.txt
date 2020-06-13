@@ -7,3 +7,5 @@ REQUIRED:
 	[/system/app/miui/] miui.apk
 
 	[/system/app/miuisystem/] miuisystem.apk
+
+	[/system/priv-app/MiuiSystemUI/] MiuiSystemUI.apk

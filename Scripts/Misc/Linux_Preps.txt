@@ -49,7 +49,6 @@ mv /mnt/d/Porting-Tools/Porting-Tools_Misc/Tools/APKTool/apktool-*-small.jar /mn
 mv /mnt/d/Porting-Tools/Porting-Tools_Misc/Tools/jadx/jadx-gui-dev.exe /mnt/d/Porting-Tools/Porting-Tools_Misc/Tools/jadx/jadx.exe
 
 	:: Clean Build Directories
-rm -rf vdexExtractor
 rm -rf smali
 rm -rf Apktool
 rm -rf jadx

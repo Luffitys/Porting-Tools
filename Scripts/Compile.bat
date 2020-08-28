@@ -19,19 +19,18 @@ cd ..
 if /I "%USES_MAGISK_MODULE%"=="y" (set APKOUTPUT=..\%APKNAME%_Magisk\system\%APP_OR_PRIV-APP%\%APKNAME%) else (set APKOUTPUT=..\%APKNAME%_APK)
 
 	:: Compile
-java -jar %APKTOOL%\apktool.jar b --no-crunch --output %APKOUTPUT%\%APKNAME%.apk ..\%APKNAME%_APK  -p %APKTOOL%\Frameworks
+java -jar %APKTOOL%\apktool.jar b --no-crunch --output %APKOUTPUT%\%APKNAME%_.apk ..\%APKNAME%_APK  -p %APKTOOL%\Frameworks
 
 	:: Zipalign
-%APKTOOL%\zipalign.exe -f 4 %APKOUTPUT%\%APKNAME%.apk %APKOUTPUT%\%APKNAME%_zipaligned.apk
-
-	:: Cleanup
-del %APKOUTPUT%\%APKNAME%.*
+%APKTOOL%\zipalign.exe -f 4 %APKOUTPUT%\%APKNAME%_.apk %APKOUTPUT%\%APKNAME%.apk
 
 	:: Sign
-java -jar %APKTOOL%\ApkSigner.jar %APKTOOL%\Misc\PublicKey.pem %APKTOOL%\Misc\PrivateKey.pk8 %APKOUTPUT%\%APKNAME%_zipaligned.apk %APKOUTPUT%\%APKNAME%.apk
+java -jar %APKTOOL%\ApkSigner.jar sign --key %APKTOOL%\Misc\PrivateKey.pk8 --cert %APKTOOL%\Misc\PublicKey.pem %APKOUTPUT%\%APKNAME%.apk
 
-	:: Cleanup apk
-del %APKOUTPUT%\%APKNAME%_zipaligned.apk
+	:: Cleanup
+del %APKOUTPUT%\%APKNAME%_.apk
+del %APKOUTPUT%\%APKNAME%.apk.idsig
+del %APKOUTPUT%\%APKNAME%.jobf
 
 if /I "%USES_MAGISK_MODULE%"=="y" (
 

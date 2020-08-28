@@ -1,8 +1,8 @@
 @echo off
 
-set /p EXTRACT_VENDOR="Extract Vendor? (y/n): "
-set /p INSTALL_FRAMEWORKS="Install Frameworks? (y/n): "
-set /p EXTRACT_CLASSES="Extract Classes? (y/n): "
+set /p EXTRACT_VENDOR="Do you want to extract the vendor partition? (y/n): "
+set /p INSTALL_FRAMEWORKS="Do you want to install APKTool frameworks? (y/n): "
+set /p EXTRACT_CLASSES="Do you want to extract system classes? (y/n): "
 
 set SYSTEM=ROM\ROM\system
 set VENDOR=ROM\ROM\vendor

@@ -2,7 +2,7 @@
 
 	:: Required, without _APK suffix
 set APKNAME=
-	:: Enter "app" or "priv-app" Directory (Only if using Magisk Module)
+	:: If using Magisk module, enter "app" or "priv-app" directory, otherwise leave blank
 set APP_OR_PRIV-APP=
 	:: Enter "y" or leave blank
 set USES_MAGISK_MODULE=

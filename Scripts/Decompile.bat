@@ -1,10 +1,10 @@
 @echo off
 
-set /p APKNAME="What's the APK name?: "
-set /p APKNAME_NEW="What should be the new APK name?: "
-set /p APP_OR_PRIV-APP="What folder? (app/priv-app): "
-set /p NEEDS_MAGISK_MODULE="Magisk Module required? (y/n): "
-set /p DECOMPILE_APK_RESOURCES="Decompile APK Resources? (y/n): "
+set /p APKNAME="What's the APK's name?: "
+set /p APKNAME_NEW="What should be the new APK's name?: "
+set /p APP_OR_PRIV-APP="What folder is the APK in? (app/priv-app): "
+set /p NEEDS_MAGISK_MODULE="Is a Magisk Module required? (y/n): "
+set /p DECOMPILE_APK_RESOURCES="Do you want to decompile the APK's Resources? (y/n): "
 
 set SYSTEM=ROM\ROM\system\system
 set APKTOOL=Tools\APKTool

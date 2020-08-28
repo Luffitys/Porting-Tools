@@ -1,27 +1,22 @@
 @echo off
 
-
-	:: Required
+	:: Required, without _APK suffix
 set APKNAME=
 	:: Enter "app" or "priv-app" Directory (Only if using Magisk Module)
 set APP_OR_PRIV-APP=
 	:: Enter "y" or leave blank
 set USES_MAGISK_MODULE=
 
-
 set APKTOOL=Tools\APKTool
 set ZIPNAME=%APKNAME%_Mod
 set ZIP=Tools\7z\7z.exe
 set ADB=Tools\adb\adb.exe
 
-
 @echo on
-
 
 cd ..
 
 if /I "%USES_MAGISK_MODULE%"=="y" (set APKOUTPUT=..\%APKNAME%_Magisk\system\%APP_OR_PRIV-APP%\%APKNAME%) else (set APKOUTPUT=..\%APKNAME%_APK)
-
 
 	:: Compile
 java -jar %APKTOOL%\apktool.jar b --no-crunch --output %APKOUTPUT%\%APKNAME%.apk ..\%APKNAME%_APK  -p %APKTOOL%\Frameworks

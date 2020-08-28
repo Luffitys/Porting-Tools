@@ -1,10 +1,8 @@
 @echo off
 
-
 set /p EXTRACT_VENDOR="Extract Vendor? (y/n): "
 set /p INSTALL_FRAMEWORKS="Install Frameworks? (y/n): "
 set /p EXTRACT_CLASSES="Extract Classes? (y/n): "
-
 
 set SYSTEM=ROM\ROM\system
 set VENDOR=ROM\ROM\vendor
@@ -13,12 +11,10 @@ set APKTOOL=Tools\APKTool
 set EXTRACTOR=Tools\Extractor
 set ZIP=Tools\7z\7z.exe
 
-
 	:: Extract System from .zip
 @echo on
 
 cd ..
-
 
 %ZIP% x .\*.zip -oTEMP\ system.new.dat.br system.transfer.list -bse0 -bso0
 
@@ -28,14 +24,11 @@ cd ..
 	:: Convert .dat -> .img
 %Extractor%\sdat2Img.exe TEMP\system.transfer.list TEMP\system.new.dat TEMP\system.img >nul
 
-
 	:: Extract system.img
 %ZIP% x -aos TEMP\system.img -o%SYSTEM% -bse0 -bso0
 
-
 	:: Extract Vendor from .zip
 if /I "%EXTRACT_VENDOR%"=="y" (
-
 
 %ZIP% x *.zip -oTEMP\ vendor.new.dat.br vendor.transfer.list -bse0 -bso0
 
@@ -45,12 +38,10 @@ if /I "%EXTRACT_VENDOR%"=="y" (
 	:: Convert .dat -> .img
 %Extractor%\sdat2Img.exe TEMP\vendor.transfer.list TEMP\vendor.new.dat TEMP\vendor.img >nul
 
-
 	:: Extract vendor.img
 %ZIP% x -aos TEMP\vendor.img -o%VENDOR% -bse0 -bso0
 
 )
-
 
 	:: Add Frameworks
 if /I "%INSTALL_FRAMEWORKS%"=="y" (
@@ -67,12 +58,9 @@ java -jar %APKTOOL%\apktool.jar if %SYSTEM%\system\priv-app\MiuiSystemUI\MiuiSys
 
 )
 
-
 	:: Extract Classes [Trial and Error]
 
-
 if /I "%EXTRACT_CLASSES%"=="y" (
-
 
 	:: miui.apk
 %ZIP% x %SYSTEM%\system\app\miui\miui.apk -oTEMP\miui *.dex -bse0 -bso0
@@ -86,7 +74,6 @@ if /I "%EXTRACT_CLASSES%"=="y" (
 	:: gson.jar
 %ZIP% x %SYSTEM%\system\framework\gson.jar -oTEMP\gson *.dex -bse0 -bso0
 
-
 	:: Decompile Classes
 java -jar %APKTOOL%\baksmali.jar d -o %CLASSES%\miui TEMP\miui\classes.dex
 java -jar %APKTOOL%\baksmali.jar d -o %CLASSES%\miuisystem TEMP\miuisystem\classes.dex
@@ -97,7 +84,6 @@ java -jar %APKTOOL%\baksmali.jar d -o %CLASSES%\framework TEMP\framework\classes
 java -jar %APKTOOL%\baksmali.jar d -o %CLASSES%\gson TEMP\gson\classes.dex
 
 )
-
 
 	:: Cleanup
 rmdir /Q /S TEMP

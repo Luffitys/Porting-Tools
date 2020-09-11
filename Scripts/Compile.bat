@@ -6,6 +6,10 @@ set APKNAME=
 set APP_OR_PRIV-APP=
 	:: Enter "y" or leave blank
 set USES_MAGISK_MODULE=
+	:: Enter "n" or leave blank
+set ARE_RESOURCES_DECOMPILED=
+	:: Enter "y" or leave blank
+set COPY_ORIGINAL_MANIFEST=
 
 set APKTOOL=Tools\APKTool
 set ZIPNAME=%APKNAME%_Mod
@@ -19,13 +23,14 @@ cd ..
 if /I "%USES_MAGISK_MODULE%"=="y" (set APKOUTPUT=..\%APKNAME%_Magisk\system\%APP_OR_PRIV-APP%\%APKNAME%) else (set APKOUTPUT=..\%APKNAME%_APK)
 
 	:: Compile
-java -jar %APKTOOL%\apktool.jar b --no-crunch --output %APKOUTPUT%\%APKNAME%_.apk ..\%APKNAME%_APK  -p %APKTOOL%\Frameworks
+if /I "%COPY_ORIGINAL_MANIFEST%"=="y" (set COPY_ORIGINAL_MANIFEST=-c)
+java -jar %APKTOOL%\apktool.jar b %COPY_ORIGINAL_MANIFEST% --no-crunch --output %APKOUTPUT%\%APKNAME%_.apk ..\%APKNAME%_APK  -p %APKTOOL%\Frameworks
 
 	:: Zipalign
 %APKTOOL%\zipalign.exe -f 4 %APKOUTPUT%\%APKNAME%_.apk %APKOUTPUT%\%APKNAME%.apk
 
 	:: Sign
-java -jar %APKTOOL%\ApkSigner.jar sign --key %APKTOOL%\Misc\PrivateKey.pk8 --cert %APKTOOL%\Misc\PublicKey.pem %APKOUTPUT%\%APKNAME%.apk
+if /I "%ARE_RESOURCES_DECOMPILED%"==!"n" (java -jar %APKTOOL%\ApkSigner.jar sign --key %APKTOOL%\Misc\PrivateKey.pk8 --cert %APKTOOL%\Misc\PublicKey.pem %APKOUTPUT%\%APKNAME%.apk)
 
 	:: Cleanup
 del %APKOUTPUT%\%APKNAME%_.apk

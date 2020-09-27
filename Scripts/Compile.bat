@@ -2,12 +2,10 @@
 
 	:: Required, without _APK suffix
 set APKNAME=
-	:: If using Magisk module, enter "app" or "priv-app" directory, otherwise leave blank
-set APP_OR_PRIV-APP=
 	:: Enter "y" or leave blank
 set USES_MAGISK_MODULE=
-	:: Enter "n" or leave blank
-set ARE_RESOURCES_DECOMPILED=
+	:: If using Magisk module, enter "app" or "priv-app" depending on the APK's directory, otherwise leave blank
+set APP_OR_PRIV-APP=
 	:: Enter "y" or leave blank
 set COPY_ORIGINAL_MANIFEST=
 
@@ -30,12 +28,10 @@ java -jar %APKTOOL%\apktool.jar b %COPY_ORIGINAL_MANIFEST% --no-crunch --output 
 %APKTOOL%\zipalign.exe -f 4 %APKOUTPUT%\%APKNAME%_.apk %APKOUTPUT%\%APKNAME%.apk
 
 	:: Sign
-if /I "%ARE_RESOURCES_DECOMPILED%"==!"n" (java -jar %APKTOOL%\ApkSigner.jar sign --key %APKTOOL%\Misc\PrivateKey.pk8 --cert %APKTOOL%\Misc\PublicKey.pem %APKOUTPUT%\%APKNAME%.apk)
+java -jar %APKTOOL%\ApkSigner.jar sign --key %APKTOOL%\Misc\PrivateKey.pk8 --cert %APKTOOL%\Misc\PublicKey.pem %APKOUTPUT%\%APKNAME%.apk
 
 	:: Cleanup
 del %APKOUTPUT%\%APKNAME%_.apk
-del %APKOUTPUT%\%APKNAME%.apk.idsig
-del %APKOUTPUT%\%APKNAME%.jobf
 
 if /I "%USES_MAGISK_MODULE%"=="y" (
 
@@ -48,7 +44,7 @@ del ..\%APKNAME%_Magisk\*.zip
 	:: Push zip to phone
 %ADB% push ..\%APKNAME%_Magisk\%ZIPNAME%.zip /sdcard/
 
-)
+) else (%ADB% install -r "%~dp1%APKOUTPUT%\%APKNAME%.apk")
 
 	:: Avoid cmd closing after finish to see eventual issues
 pause

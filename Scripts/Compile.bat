@@ -8,6 +8,8 @@ set USES_MAGISK_MODULE=
 set APP_OR_PRIV-APP=
 	:: Enter "y" or leave blank
 set COPY_ORIGINAL_MANIFEST=
+	:: Enter a value ranging from 0-9, 0 being the lowest and 9 the highest compresion level
+set ZIP_COMPRESSION_LEVEL=
 
 set APKTOOL=Tools\APKTool
 set ZIPNAME=%APKNAME%_Mod
@@ -39,7 +41,7 @@ if /I "%USES_MAGISK_MODULE%"=="y" (
 del ..\%APKNAME%_Magisk\*.zip
 
 	:: Compress --> zip
-%ZIP% a ..\%APKNAME%_Magisk\%ZIPNAME%.zip -xr!.git* -xr!LICENSE -r ..\%APKNAME%_Magisk\* -mx9
+%ZIP% a ..\%APKNAME%_Magisk\%ZIPNAME%.zip -xr!.git* -xr!LICENSE -r ..\%APKNAME%_Magisk\* -mx%ZIP_COMPRESSION_LEVEL%
 
 	:: Push zip to phone
 %ADB% push ..\%APKNAME%_Magisk\%ZIPNAME%.zip /sdcard/

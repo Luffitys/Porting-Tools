@@ -30,7 +30,7 @@ cd ..
 	:: Extract Vendor from .zip
 if /I "%EXTRACT_VENDOR%"=="y" (
 
-%ZIP% x *.zip -oTEMP\ vendor.new.dat.br vendor.transfer.list -bse0 -bso0
+%ZIP% x input-zip\*.zip -oTEMP\ vendor.new.dat.br vendor.transfer.list -bse0 -bso0
 
 	:: Convert .dat.br -> .dat
 %Extractor%\Brotli.exe --decompress --in TEMP\vendor.new.dat.br --out TEMP\vendor.new.dat

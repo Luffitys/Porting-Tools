@@ -78,9 +78,9 @@ if /I "%EXTRACT_CLASSES%"=="y" (
 java -jar %APKTOOL%\baksmali.jar d -o %CLASSES%\miui TEMP\miui\classes.dex
 java -jar %APKTOOL%\baksmali.jar d -o %CLASSES%\miuisystem TEMP\miuisystem\classes.dex
 java -jar %APKTOOL%\baksmali.jar d -o %CLASSES%\framework TEMP\framework\classes.dex
-java -jar %APKTOOL%\baksmali.jar d -o %CLASSES%\framework TEMP\framework\classes2.dex
-java -jar %APKTOOL%\baksmali.jar d -o %CLASSES%\framework TEMP\framework\classes3.dex
-java -jar %APKTOOL%\baksmali.jar d -o %CLASSES%\framework TEMP\framework\classes4.dex
+java -jar %APKTOOL%\baksmali.jar d -o %CLASSES%\framework2 TEMP\framework\classes2.dex
+java -jar %APKTOOL%\baksmali.jar d -o %CLASSES%\framework3 TEMP\framework\classes3.dex
+java -jar %APKTOOL%\baksmali.jar d -o %CLASSES%\framework4 TEMP\framework\classes4.dex
 java -jar %APKTOOL%\baksmali.jar d -o %CLASSES%\gson TEMP\gson\classes.dex
 
 )

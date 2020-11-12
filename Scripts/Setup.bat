@@ -16,7 +16,7 @@ set ZIP=Tools\7z\7z.exe
 
 cd ..
 
-%ZIP% x .\*.zip -oTEMP\ system.new.dat.br system.transfer.list -bse0 -bso0
+%ZIP% x input-zip\*.zip -oTEMP\ system.new.dat.br system.transfer.list -bse0 -bso0
 
 	:: Convert .dat.br -> .dat
 %Extractor%\Brotli.exe --decompress --in TEMP\system.new.dat.br --out TEMP\system.new.dat

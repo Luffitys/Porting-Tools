@@ -1,0 +1,1 @@
+..\Tools\adb\adb.exe logcat > logs.txt

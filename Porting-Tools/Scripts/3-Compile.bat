@@ -24,7 +24,7 @@ if /I "%USES_MAGISK_MODULE%"=="y" (set APKOUTPUT=..\%APKNAME%_Magisk\system\%APP
 
 	:: Compile
 if /I "%COPY_ORIGINAL_MANIFEST%"=="y" (set COPY_ORIGINAL_MANIFEST=-c)
-java -jar %APKTOOL%\apktool.jar b %COPY_ORIGINAL_MANIFEST% --no-crunch --output %APKOUTPUT%\%APKNAME%_.apk ..\%APKNAME%_APK  -p %APKTOOL%\Frameworks
+java -jar %APKTOOL%\apktool.jar b %COPY_ORIGINAL_MANIFEST% --output %APKOUTPUT%\%APKNAME%_.apk ..\%APKNAME%_APK  -p %APKTOOL%\Frameworks
 
 	:: Zipalign
 %APKTOOL%\zipalign.exe -f 4 %APKOUTPUT%\%APKNAME%_.apk %APKOUTPUT%\%APKNAME%.apk

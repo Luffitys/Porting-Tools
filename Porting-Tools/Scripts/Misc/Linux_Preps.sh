@@ -2,7 +2,7 @@
 sudo apt update -y && sudo apt full-upgrade -y && sudo apt autoremove -y && sudo apt clean -y && sudo apt autoclean -y
 
 	# Install Requirements
-sudo apt install libz-dev unzip build-essential openjdk-8-jdk-headless
+sudo apt install libz-dev unzip build-essential openjdk-8-jdk-headless -y
 
 	# Prepare vdexExtractor
 git clone https://github.com/anestisb/vdexExtractor.git

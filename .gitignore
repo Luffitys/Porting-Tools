@@ -2,13 +2,8 @@
 *-Tools/ROM*/
 *-Tools/TEMP/
 *-Tools/Scripts/logs.txt
-*-Tools/input-zip/*.zip
+*-Tools/Tools/APKTool/Frameworks/
 
-*_APK/build/
-*_APK/*.apk
+*_APK/
 
-*_Magisk/system/*app/*/*.apk
-*_Magisk/*.zip
-
-*.idsig
-*.jobf
+*_Magisk/

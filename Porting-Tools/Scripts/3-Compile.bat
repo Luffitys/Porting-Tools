@@ -35,6 +35,7 @@ java -jar %APKTOOL%\ApkSigner.jar sign --key %APKTOOL%\Misc\PrivateKey.pk8 --cer
 	:: Cleanup
 del %APKOUTPUT%\%APKNAME%_.apk
 del %APKOUTPUT%\%APKNAME%.apk.idsig
+del %APKOUTPUT%\%APKNAME%.apk.jobf
 
 if /I "%USES_MAGISK_MODULE%"=="y" (
 

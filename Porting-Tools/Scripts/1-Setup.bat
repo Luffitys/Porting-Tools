@@ -1,11 +1,15 @@
 @echo off
 
 set /p EXTRACT_VENDOR="Do you want to extract the vendor partition? (y/n): "
+set /p EXTRACT_PRODUCT="Do you want to extract the product partition? (y/n): "
+set /p EXTRACT_SYSTEM_EXT="Do you want to extract the system_ext partition? (y/n): "
 set /p INSTALL_FRAMEWORKS="Do you want to install APKTool frameworks? (y/n): "
 set /p EXTRACT_CLASSES="Do you want to extract system classes? (y/n): "
 
 set SYSTEM=ROM\ROM\system
 set VENDOR=ROM\ROM\vendor
+set PRODUCT=ROM\ROM\product
+set SYSTEM_EXT=ROM\ROM\system_ext
 set CLASSES=ROM\Classes
 set APKTOOL=Tools\APKTool
 set EXTRACTOR=Tools\Extractor
@@ -43,6 +47,38 @@ if /I "%EXTRACT_VENDOR%"=="y" (
 
 )
 
+	:: Extract Product from .zip
+if /I "%EXTRACT_PRODUCT%"=="y" (
+
+%ZIP% x input-zip\*.zip -oTEMP\ product.new.dat.br product.transfer.list -bse0 -bso0
+
+	:: Convert .dat.br -> .dat
+%Extractor%\Brotli.exe --decompress --in TEMP\product.new.dat.br --out TEMP\product.new.dat
+
+	:: Convert .dat -> .img
+%Extractor%\sdat2Img.exe TEMP\product.transfer.list TEMP\product.new.dat TEMP\product.img >nul
+
+	:: Extract product.img
+%ZIP% x -aos TEMP\product.img -o%PRODUCT% -bse0 -bso0
+
+)
+
+	:: Extract System_Ext from .zip
+if /I "%EXTRACT_SYSTEM_EXT%"=="y" (
+
+%ZIP% x input-zip\*.zip -oTEMP\ system_ext.new.dat.br system_ext.transfer.list -bse0 -bso0
+
+	:: Convert .dat.br -> .dat
+%Extractor%\Brotli.exe --decompress --in TEMP\system_ext.new.dat.br --out TEMP\system_ext.new.dat
+
+	:: Convert .dat -> .img
+%Extractor%\sdat2Img.exe TEMP\system_ext.transfer.list TEMP\system_ext.new.dat TEMP\system_ext.img >nul
+
+	:: Extract system_ext.img
+%ZIP% x -aos TEMP\system_ext.img -o%SYSTEM_EXT% -bse0 -bso0
+
+)
+
 	:: Add Frameworks
 if /I "%INSTALL_FRAMEWORKS%"=="y" (
 
@@ -53,6 +89,10 @@ java -jar %APKTOOL%\apktool.jar if %SYSTEM%\system\framework\framework-ext-res\f
 java -jar %APKTOOL%\apktool.jar if %SYSTEM%\system\app\miui\miui.apk -p %APKTOOL%\Frameworks
 
 java -jar %APKTOOL%\apktool.jar if %SYSTEM%\system\app\miuisystem\miuisystem.apk -p %APKTOOL%\Frameworks
+
+if /I "%EXTRACT_SYSTEM_EXT%"=="y" (
+java -jar %APKTOOL%\apktool.jar if %SYSTEM_EXT%\priv-app\MiuiSystemUI\MiuiSystemUI.apk -p %APKTOOL%\Frameworks
+)
 
 )
 

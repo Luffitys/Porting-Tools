@@ -16,7 +16,7 @@ if /I "%REQUIRES_MAGISK_MODULE%"=="y" (robocopy Tools\Magisk_Template ..\%APKNAM
 @echo on
 
 	:: Decompile APP
-java -jar %APKTOOL%\apktool.jar d -b --output ..\%APKNAME_NEW%_APK %SYSTEM%\%APKPATH% -p %APKTOOL%\Frameworks
+java -jar %APKTOOL%\apktool.jar d --no-debug-info --keep-broken-res --output ..\%APKNAME_NEW%_APK %SYSTEM%\%APKPATH% -p %APKTOOL%\Frameworks
 
 	:: Avoid cmd closing after finish to see eventual issues
 pause

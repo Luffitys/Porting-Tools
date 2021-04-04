@@ -9,7 +9,6 @@ set PARTITION=system\system
 set /p APP_OR_PRIV-APP="What folder is the APK in? (app/priv-app): "
 set /p REQUIRES_MAGISK_MODULE="Is a Magisk Module for the modded APK required? (y/n): "
 
-set SYSTEM=ROM\ROM\system\system
 set ROM=ROM\ROM
 set APKTOOL=Tools\APKTool
 set APKPATH=%APP_OR_PRIV-APP%\%APKNAME%\%APKNAME%.apk

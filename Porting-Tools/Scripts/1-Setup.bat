@@ -5,14 +5,17 @@ set /p EXTRACT_VENDOR="Do you want to extract the vendor partition? (y/n): "
 set /p EXTRACT_PRODUCT="Do you want to extract the product partition? (y/n): "
 set /p EXTRACT_SYSTEM_EXT="Do you want to extract the system_ext partition? (y/n): "
 if /I "%EXTRACT_SYSTEM%"=="y" (
+if /I "%EXTRACT_SYSTEM_EXT%"=="y" (
 set /p INSTALL_FRAMEWORKS="Do you want to install APKTool frameworks? (y/n): "
 set /p EXTRACT_CLASSES="Do you want to extract system classes? (.EU ROM only) (y/n): "
 )
+)
 
-set SYSTEM=ROM\ROM\system
-set VENDOR=ROM\ROM\vendor
-set PRODUCT=ROM\ROM\product
-set SYSTEM_EXT=ROM\ROM\system_ext
+set ROM=ROM\ROM
+set SYSTEM=%ROM%\system
+set VENDOR=%ROM%\vendor
+set PRODUCT=%ROM%\product
+set SYSTEM_EXT=%ROM%\system_ext
 set CLASSES=ROM\Classes
 set APKTOOL=Tools\APKTool
 set EXTRACTOR=Tools\Extractor
@@ -95,10 +98,8 @@ java -jar %APKTOOL%\apktool.jar if %SYSTEM%\system\app\miui\miui.apk -p %APKTOOL
 
 java -jar %APKTOOL%\apktool.jar if %SYSTEM%\system\app\miuisystem\miuisystem.apk -p %APKTOOL%\Frameworks
 
-if /I "%EXTRACT_SYSTEM_EXT%"=="y" (
 java -jar %APKTOOL%\apktool.jar if %SYSTEM_EXT%\priv-app\MiuiSystemUI\MiuiSystemUI.apk -p %APKTOOL%\Frameworks
 
-)
 )
 
 	:: Extract Classes [Trial and Error]
@@ -111,6 +112,9 @@ if /I "%EXTRACT_CLASSES%"=="y" (
 	:: miuisystem.apk
 %ZIP% x %SYSTEM%\system\app\miuisystem\miuisystem.apk -oTEMP\miuisystem *.dex -bse0 -bso0
 
+	:: MiuiSystemUI.apk
+%ZIP% x %SYSTEM_EXT%\priv-app\MiuiSystemUI\MiuiSystemUI.apk -oTEMP\MiuiSystemUI *.dex -bse0 -bso0
+
 	:: framework.jar
 %ZIP% x %SYSTEM%\system\framework\framework.jar -oTEMP\framework *.dex -bse0 -bso0
 
@@ -120,6 +124,8 @@ if /I "%EXTRACT_CLASSES%"=="y" (
 	:: Decompile Classes
 java -jar %APKTOOL%\baksmali.jar d -o %CLASSES%\miui TEMP\miui\classes.dex
 java -jar %APKTOOL%\baksmali.jar d -o %CLASSES%\miuisystem TEMP\miuisystem\classes.dex
+java -jar %APKTOOL%\baksmali.jar d -o %CLASSES%\MiuiSystemUI TEMP\MiuiSystemUI\classes.dex
+java -jar %APKTOOL%\baksmali.jar d -o %CLASSES%\MiuiSystemUI2 TEMP\MiuiSystemUI\classes2.dex
 java -jar %APKTOOL%\baksmali.jar d -o %CLASSES%\framework TEMP\framework\classes.dex
 java -jar %APKTOOL%\baksmali.jar d -o %CLASSES%\framework2 TEMP\framework\classes2.dex
 java -jar %APKTOOL%\baksmali.jar d -o %CLASSES%\framework3 TEMP\framework\classes3.dex

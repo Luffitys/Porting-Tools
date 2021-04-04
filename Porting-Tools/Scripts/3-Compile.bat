@@ -1,19 +1,19 @@
 @echo off
 
 	:: Enter the APK Name without the "_APK" directory suffix
-set APKNAME=MiuiCamera
+set APKNAME=
 	:: If a Magisk Module is required, enter "y", otherwise leave blank
-set REQUIRES_MAGISK_MODULE=y
+set REQUIRES_MAGISK_MODULE=
 	:: If using Magisk module, enter the partition name the APK should be in
-set PARTITION=system
+set PARTITION=
 	:: If using Magisk module, enter "app" or "priv-app" depending on the APK's directory, otherwise leave blank
-set APP_OR_PRIV-APP=priv-app
+set APP_OR_PRIV-APP=
 	:: If the original manifest should be used, enter "y", otherwise leave blank
 set COPY_ORIGINAL_MANIFEST=
 	:: If the APK should be compiled with AAPT2, enter "y", otherwise leave blank
 set COMPILE_WITH_AAPT2=
 	:: If using Magisk module, enter a value ranging from 0-9, 0 being the lowest and 9 the highest compression level
-set ZIP_COMPRESSION_LEVEL=4
+set ZIP_COMPRESSION_LEVEL=
 
 set APKTOOL=Tools\APKTool
 set ZIPNAME=%APKNAME%_Mod

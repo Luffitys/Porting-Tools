@@ -1,10 +1,13 @@
 @echo off
 
+set /p EXTRACT_SYSTEM="Do you want to extract the system partition? (y/n): "
 set /p EXTRACT_VENDOR="Do you want to extract the vendor partition? (y/n): "
 set /p EXTRACT_PRODUCT="Do you want to extract the product partition? (y/n): "
 set /p EXTRACT_SYSTEM_EXT="Do you want to extract the system_ext partition? (y/n): "
+if /I "%EXTRACT_SYSTEM%"=="y" (
 set /p INSTALL_FRAMEWORKS="Do you want to install APKTool frameworks? (y/n): "
-set /p EXTRACT_CLASSES="Do you want to extract system classes? (y/n): "
+set /p EXTRACT_CLASSES="Do you want to extract system classes? (.EU ROM only) (y/n): "
+)
 
 set SYSTEM=ROM\ROM\system
 set VENDOR=ROM\ROM\vendor
@@ -15,11 +18,11 @@ set APKTOOL=Tools\APKTool
 set EXTRACTOR=Tools\Extractor
 set ZIP=Tools\7z\7z.exe
 
-	:: Extract System from .zip
 @echo on
-
 cd ..
 
+	:: Extract System from .zip
+if /I "%EXTRACT_SYSTEM%"=="y" (
 %ZIP% x input-zip\*.zip -oTEMP\ system.new.dat.br system.transfer.list -bse0 -bso0
 
 	:: Convert .dat.br -> .dat
@@ -30,6 +33,8 @@ cd ..
 
 	:: Extract system.img
 %ZIP% x -aos TEMP\system.img -o%SYSTEM% -bse0 -bso0
+
+)
 
 	:: Extract Vendor from .zip
 if /I "%EXTRACT_VENDOR%"=="y" (
@@ -92,8 +97,8 @@ java -jar %APKTOOL%\apktool.jar if %SYSTEM%\system\app\miuisystem\miuisystem.apk
 
 if /I "%EXTRACT_SYSTEM_EXT%"=="y" (
 java -jar %APKTOOL%\apktool.jar if %SYSTEM_EXT%\priv-app\MiuiSystemUI\MiuiSystemUI.apk -p %APKTOOL%\Frameworks
-)
 
+)
 )
 
 	:: Extract Classes [Trial and Error]

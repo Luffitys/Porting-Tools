@@ -14,7 +14,10 @@ set APKTOOL=Tools\APKTool
 
 cd ..
 
-if /I "%REQUIRES_MAGISK_MODULE%"=="y" (robocopy Tools\Magisk_Template ..\%APKNAME_NEW%_Magisk /e /NFL /NDL /NJH /NJS)
+if /I "%REQUIRES_MAGISK_MODULE%"=="y" (
+robocopy Tools\Magisk_Template ..\%APKNAME_NEW%_Magisk /e /NFL /NDL /NJH /NJS
+del ..\%APKNAME_NEW%_Magisk\.gitattributes ..\%APKNAME_NEW%_Magisk\.gitignore ..\%APKNAME_NEW%_Magisk\LICENSE ..\%APKNAME_NEW%_Magisk\system\placeholder
+)
 
 @echo on
 

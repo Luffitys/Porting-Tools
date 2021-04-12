@@ -1,5 +1,6 @@
 @echo off
 
+set /p EXTENSION="What extension do the compressed files have? (.dat.br/.bin): "
 set /p EXTRACT_SYSTEM="Do you want to extract the system partition? (y/n): "
 set /p EXTRACT_VENDOR="Do you want to extract the vendor partition? (y/n): "
 set /p EXTRACT_PRODUCT="Do you want to extract the product partition? (y/n): "
@@ -24,8 +25,9 @@ set ZIP=Tools\7z\7z.exe
 @echo on
 cd ..
 
-	:: Extract System from .zip
+if /I "%EXTENSION%"==".dat.br" (
 if /I "%EXTRACT_SYSTEM%"=="y" (
+	:: Extract system partition from .zip
 %ZIP% x input-zip\*.zip -oTEMP\ system.new.dat.br system.transfer.list -bse0 -bso0
 
 	:: Convert .dat.br -> .dat
@@ -38,8 +40,7 @@ if /I "%EXTRACT_SYSTEM%"=="y" (
 %ZIP% x -aos TEMP\system.img -o%SYSTEM% -bse0 -bso0
 
 )
-
-	:: Extract Vendor from .zip
+	:: Extract vendor partition from .zip
 if /I "%EXTRACT_VENDOR%"=="y" (
 
 %ZIP% x input-zip\*.zip -oTEMP\ vendor.new.dat.br vendor.transfer.list -bse0 -bso0
@@ -54,8 +55,7 @@ if /I "%EXTRACT_VENDOR%"=="y" (
 %ZIP% x -aos TEMP\vendor.img -o%VENDOR% -bse0 -bso0
 
 )
-
-	:: Extract Product from .zip
+	:: Extract product partition from .zip
 if /I "%EXTRACT_PRODUCT%"=="y" (
 
 %ZIP% x input-zip\*.zip -oTEMP\ product.new.dat.br product.transfer.list -bse0 -bso0
@@ -70,8 +70,7 @@ if /I "%EXTRACT_PRODUCT%"=="y" (
 %ZIP% x -aos TEMP\product.img -o%PRODUCT% -bse0 -bso0
 
 )
-
-	:: Extract System_Ext from .zip
+	:: Extract system_ext partition from .zip
 if /I "%EXTRACT_SYSTEM_EXT%"=="y" (
 
 %ZIP% x input-zip\*.zip -oTEMP\ system_ext.new.dat.br system_ext.transfer.list -bse0 -bso0
@@ -85,6 +84,40 @@ if /I "%EXTRACT_SYSTEM_EXT%"=="y" (
 	:: Extract system_ext.img
 %ZIP% x -aos TEMP\system_ext.img -o%SYSTEM_EXT% -bse0 -bso0
 
+)
+) else (
+	:: Copy extractor to TEMP\
+robocopy Tools\Extractor\ TEMP\ payload_dumper.py /e /NFL /NDL /NJH /NJS
+robocopy Tools\Extractor\ TEMP\ update_metadata_pb2.py /e /NFL /NDL /NJH /NJS
+
+	:: Extract payload.bin from .zip
+%ZIP% x input-zip\*.zip -oTEMP\ payload.bin -bse0 -bso0
+
+	:: Decompress payload.bin
+python3 TEMP\payload_dumper.py TEMP\payload.bin
+
+	:: Move .img files to TEMP\
+move .\*.img TEMP\
+
+	:: Extract system.img
+if /I "%EXTRACT_SYSTEM%"=="y" (
+%ZIP% x -aos TEMP\system.img -o%SYSTEM% -bse0 -bso0
+)
+
+	:: Extract vendor.img
+if /I "%EXTRACT_VENDOR%"=="y" (
+%ZIP% x -aos TEMP\vendor.img -o%VENDOR% -bse0 -bso0
+)
+
+	:: Extract product.img
+if /I "%EXTRACT_PRODUCT%"=="y" (
+%ZIP% x -aos TEMP\product.img -o%PRODUCT% -bse0 -bso0
+)
+
+	:: Extract system_ext.img
+if /I "%EXTRACT_SYSTEM_EXT%"=="y" (
+%ZIP% x -aos TEMP\system_ext.img -o%SYSTEM_EXT% -bse0 -bso0
+)
 )
 
 	:: Add Frameworks

@@ -12,6 +12,8 @@ set APP_OR_PRIV-APP=
 set COPY_ORIGINAL_MANIFEST=
 	:: If the APK should be compiled with AAPT2, enter "y", otherwise leave blank
 set COMPILE_WITH_AAPT2=
+	:: CRASH FIX: If using Magisk module and if the APKs libs should be copied to the Magisk directory, enter "y", otherwise leave blank
+set REQUIRES_LIB_COPYING=
 	:: If using Magisk module, enter a value ranging from 0-9, 0 being the lowest and 9 the highest compression level
 set ZIP_COMPRESSION_LEVEL=
 
@@ -37,6 +39,15 @@ set APKOUTPUT=..\%APKNAME%_APK
 @echo on
 
 cd ..
+
+if /I "%REQUIRES_MAGISK_MODULE%"=="y" (
+if /I "%REQUIRES_LIB_COPYING%"=="y" (
+mkdir %APKOUTPUT%\lib\
+move ..\%APKNAME%_APK\lib\arm64-v8a %APKOUTPUT%\lib\
+ren %APKOUTPUT%\lib\arm64-v8a arm64
+rmdir /Q /S ..\%APKNAME%_APK\lib
+)
+)
 
 	:: Compile
 java -jar %APKTOOL%\apktool.jar b --no-crunch %COMPILE_WITH_AAPT2% %COPY_ORIGINAL_MANIFEST% --output %APKOUTPUT%\%APKNAME%_.apk ..\%APKNAME%_APK  -p %APKTOOL%\Frameworks

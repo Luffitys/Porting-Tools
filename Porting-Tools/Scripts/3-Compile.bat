@@ -39,7 +39,7 @@ set APKOUTPUT=..\%APKNAME%_APK
 cd ..
 
 	:: Compile
-java -jar %APKTOOL%\apktool.jar b %COMPILE_WITH_AAPT2% %COPY_ORIGINAL_MANIFEST% --output %APKOUTPUT%\%APKNAME%_.apk ..\%APKNAME%_APK  -p %APKTOOL%\Frameworks
+java -jar %APKTOOL%\apktool.jar b --no-crunch %COMPILE_WITH_AAPT2% %COPY_ORIGINAL_MANIFEST% --output %APKOUTPUT%\%APKNAME%_.apk ..\%APKNAME%_APK  -p %APKTOOL%\Frameworks
 
 	:: Zipalign
 %APKTOOL%\zipalign.exe -f 4 %APKOUTPUT%\%APKNAME%_.apk %APKOUTPUT%\%APKNAME%.apk

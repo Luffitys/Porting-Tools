@@ -2,7 +2,7 @@
 *-Tools/ROM*/
 *-Tools/TEMP/
 *-Tools/Scripts/logs.txt
-*-Tools/Tools/APKTool/Frameworks/
+*-Tools/Tools/APKTool/Frameworks/*.apk
 
 *_APK/
 

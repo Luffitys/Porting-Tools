@@ -93,6 +93,9 @@ robocopy Tools\Extractor\ TEMP\ update_metadata_pb2.py /e /NFL /NDL /NJH /NJS
 	:: Extract payload.bin from .zip
 %ZIP% x input-zip\*.zip -oTEMP\ payload.bin -bse0 -bso0
 
+	:: Install Python Script Dependency
+pip install --upgrade google-api-python-client
+
 	:: Decompress payload.bin
 python3 TEMP\payload_dumper.py TEMP\payload.bin
 

@@ -4,6 +4,6 @@
 *-Tools/Scripts/logs.txt
 *-Tools/Tools/APKTool/Frameworks/*.apk
 
-*_APK/
+*_DECOMPILED/
 
 *_Magisk/

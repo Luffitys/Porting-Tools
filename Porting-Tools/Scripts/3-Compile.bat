@@ -1,80 +1,80 @@
 @echo off
 
-	:: Enter the APK Name without the "_APK" directory suffix
-set APKNAME=
+	:: Enter the file's name without the "_DECOMPILED" directory suffix
+set FILENAME=
+	:: Enter the file's extension
+set FILEEXTENSION=
+	:: If the file is a .jar file, define the --min-sdk-version
+set JARAVERSION=
 	:: If a Magisk Module is required, enter "y", otherwise leave blank
 set REQUIRES_MAGISK_MODULE=
-	:: If using Magisk module, enter the partition name the APK should be in
-set PARTITION=
-	:: If using Magisk module, enter "app" or "priv-app" depending on the APK's directory, otherwise leave blank
-set APP_OR_PRIV-APP=
+	:: If using Magisk module, enter the path the file should be in. If the file is an APK, don't type the APK Folder (Example: system\priv-app)
+set FILEPATH=
 	:: If the original manifest should be used, enter "y", otherwise leave blank
 set COPY_ORIGINAL_MANIFEST=
-	:: If the APK should be compiled with AAPT2, enter "y", otherwise leave blank
+	:: If the file should be compiled with AAPT2, enter "y", otherwise leave blank
 set COMPILE_WITH_AAPT2=
-	:: CRASH FIX: If using Magisk module and if the APKs libs should be copied to the Magisk directory, enter "y", otherwise leave blank
+	:: CRASH FIX: If using Magisk module and if the file's libs should be copied to the Magisk directory, enter "y", otherwise leave blank
 set REQUIRES_LIB_COPYING=
 	:: If using Magisk module, enter a value ranging from 0-9, 0 being the lowest and 9 the highest compression level
 set ZIP_COMPRESSION_LEVEL=
 
 set APKTOOL=Tools\APKTool
-set ZIPNAME=%APKNAME%_Mod
+set ZIPNAME=%FILENAME%_Mod
 set ZIP=Tools\7z\7z.exe
 set ADB=Tools\adb\adb.exe
 
+if /I not "%JARAVERSION%"=="" (
+	set JARAVERSION=--min-sdk-version %JARAVERSION%
+)
 if /I "%COPY_ORIGINAL_MANIFEST%"=="y" (
 set COPY_ORIGINAL_MANIFEST=-c
 )
-
 if /I "%COMPILE_WITH_AAPT2%"=="y" (
 set COMPILE_WITH_AAPT2=--use-aapt2
 )
-
 if /I "%REQUIRES_MAGISK_MODULE%"=="y" (
-set APKOUTPUT=..\%APKNAME%_Magisk\%PARTITION%\%APP_OR_PRIV-APP%\%APKNAME%
+if /I "%FILEEXTENSION%"=="apk" (
+set FILEOUTPUT=..\%FILENAME%_Magisk\%FILEPATH%\%FILENAME%
 ) else (
-set APKOUTPUT=..\%APKNAME%_APK
+set FILEOUTPUT=..\%FILENAME%_Magisk\%FILEPATH%
+)
+) else (
+set FILEOUTPUT=..\%FILENAME%_DECOMPILED
 )
 
 @echo on
-
 cd ..
 
 if /I "%REQUIRES_MAGISK_MODULE%"=="y" (
 if /I "%REQUIRES_LIB_COPYING%"=="y" (
-mkdir %APKOUTPUT%\lib\
-move ..\%APKNAME%_APK\lib\arm64-v8a %APKOUTPUT%\lib\
-ren %APKOUTPUT%\lib\arm64-v8a arm64
-rmdir /Q /S ..\%APKNAME%_APK\lib
+	mkdir %FILEOUTPUT%\lib\
+	move ..\%FILENAME%_DECOMPILED\lib\arm64-v8a %FILEOUTPUT%\lib\
+	ren %FILEOUTPUT%\lib\arm64-v8a arm64
+	rmdir /Q /S ..\%FILENAME%_DECOMPILED\lib
 )
 )
 
 	:: Compile
-java -jar %APKTOOL%\apktool.jar b --no-crunch %COMPILE_WITH_AAPT2% %COPY_ORIGINAL_MANIFEST% --output %APKOUTPUT%\%APKNAME%_.apk ..\%APKNAME%_APK  -p %APKTOOL%\Frameworks
-
+java -jar %APKTOOL%\apktool.jar b --no-crunch %COMPILE_WITH_AAPT2% %COPY_ORIGINAL_MANIFEST% --output %FILEOUTPUT%\%FILENAME%_.%FILEEXTENSION% ..\%FILENAME%_DECOMPILED  -p %APKTOOL%\Frameworks
 	:: Zipalign
-%APKTOOL%\zipalign.exe -f 4 %APKOUTPUT%\%APKNAME%_.apk %APKOUTPUT%\%APKNAME%.apk
-
+%APKTOOL%\zipalign.exe -f 4 %FILEOUTPUT%\%FILENAME%_.%FILEEXTENSION% %FILEOUTPUT%\%FILENAME%.%FILEEXTENSION%
 	:: Sign
-java -jar %APKTOOL%\ApkSigner.jar sign --key %APKTOOL%\Misc\PrivateKey.pk8 --cert %APKTOOL%\Misc\PublicKey.pem %APKOUTPUT%\%APKNAME%.apk
-
+java -jar %APKTOOL%\ApkSigner.jar sign %JARAVERSION% --key %APKTOOL%\Misc\PrivateKey.pk8 --cert %APKTOOL%\Misc\PublicKey.pem %FILEOUTPUT%\%FILENAME%.%FILEEXTENSION%
 	:: Cleanup
-del %APKOUTPUT%\%APKNAME%_.apk
-del %APKOUTPUT%\%APKNAME%.apk.idsig
-del %APKOUTPUT%\%APKNAME%.apk.jobf
-
+del %FILEOUTPUT%\%FILENAME%_.%FILEEXTENSION%
+del %FILEOUTPUT%\%FILENAME%.%FILEEXTENSION%.idsig
+del %FILEOUTPUT%\%FILENAME%.%FILEEXTENSION%.jobf
 if /I "%REQUIRES_MAGISK_MODULE%"=="y" (
-
-	:: Cleanup zip
-del ..\%APKNAME%_Magisk\*.zip
-
-	:: Compress --> zip
-%ZIP% a ..\%APKNAME%_Magisk\%ZIPNAME%.zip -xr!.git* -xr!LICENSE -r ..\%APKNAME%_Magisk\* -mx%ZIP_COMPRESSION_LEVEL%
-
-	:: Push zip to phone
-%ADB% push ..\%APKNAME%_Magisk\%ZIPNAME%.zip /sdcard/
-
-) else (%ADB% install -r "%~dp1%APKOUTPUT%\%APKNAME%.apk")
+		:: Cleanup zip
+	del ..\%FILENAME%_Magisk\*.zip
+		:: Compress --> zip
+	%ZIP% a ..\%FILENAME%_Magisk\%ZIPNAME%.zip -xr!.git* -xr!LICENSE -r ..\%FILENAME%_Magisk\* -mx%ZIP_COMPRESSION_LEVEL%
+		:: Push zip to phone
+	%ADB% push ..\%FILENAME%_Magisk\%ZIPNAME%.zip /sdcard/
+) else (
+	%ADB% install -r "%~dp1%FILEOUTPUT%\%FILENAME%.%FILEEXTENSION%"
+)
 
 	:: Avoid cmd closing after finish to see eventual issues
 pause

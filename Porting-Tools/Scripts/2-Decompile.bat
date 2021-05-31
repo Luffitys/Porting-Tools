@@ -1,42 +1,43 @@
 @echo off
 
-set /p APKNAME="What's the APK's name?: "
-set /p APKNAME_NEW="What should be the decompiled APK's name?: "
-set /p PARTITION="What partition is the APK in? (system/system_ext/vendor/product): "
-if /I "%PARTITION%"=="system" (
-set PARTITION=system\system
+set /p INPUTDIR="Is the file in the ROM or the input folder? (ROM/input): "
+if /I "%INPUTDIR%"=="input" (
+	set INPUTDIR=input
+	set /p FILEPATH="What is the file's name? (example: services.jar): "
+) else (
+	set INPUTDIR=ROM\ROM
+	set /p FILEPATH="What is the path to the file? (example: system\system\framework\services.jar): "
 )
-set /p APP_OR_PRIV-APP="What folder is the APK in? (app/priv-app): "
-set /p REQUIRES_MAGISK_MODULE="Is a Magisk Module for the modded APK required? (y/n): "
-set /p APKTOOL_DEX="Should the .dex file(s) be decompiled? (y/n): "
-set /p APKTOOL_RESOURCES="Should the .arsc file be decompiled? (y/n): "
+set /p FILENAME_NEW="What should be the decompiled file's name, without extension, be? (example: MiuiCameraMOD): "
+set /p REQUIRES_MAGISK_MODULE="Is a Magisk Module for the decompiled file required? (y/n): "
+set /p APKTOOL_DEX="Should the file's .dex file(s) be decompiled? (y/n): "
+set /p APKTOOL_RESOURCES="Should the file's .arsc file be decompiled? (y/n): "
 
-set ROM=ROM\ROM
 set APKTOOL=Tools\APKTool
 
 if /I "%APKTOOL_DEX%"=="n" (
-set APKTOOL_DEX=--no-src
+	set APKTOOL_DEX=--no-src
 ) else (
-set APKTOOL_DEX=
+	set APKTOOL_DEX=
 )
 
 if /I "%APKTOOL_RESOURCES%"=="n" (
-set APKTOOL_RESOURCES=--no-res
+	set APKTOOL_RESOURCES=--no-res
 ) else (
-set APKTOOL_RESOURCES=
+	set APKTOOL_RESOURCES=
 )
 
 cd ..
 
 if /I "%REQUIRES_MAGISK_MODULE%"=="y" (
-robocopy Tools\Magisk_Template ..\%APKNAME_NEW%_Magisk /e /NFL /NDL /NJH /NJS
-del ..\%APKNAME_NEW%_Magisk\.gitattributes ..\%APKNAME_NEW%_Magisk\.gitignore ..\%APKNAME_NEW%_Magisk\LICENSE ..\%APKNAME_NEW%_Magisk\system\placeholder
+	robocopy Tools\Magisk_Template ..\%FILENAME_NEW%_Magisk /e /NFL /NDL /NJH /NJS
+	del ..\%FILENAME_NEW%_Magisk\.gitattributes ..\%FILENAME_NEW%_Magisk\.gitignore ..\%FILENAME_NEW%_Magisk\LICENSE ..\%FILENAME_NEW%_Magisk\system\placeholder
 )
 
 @echo on
 
 	:: Decompile APP
-java -jar %APKTOOL%\apktool.jar d %APKTOOL_DEX% %APKTOOL_RESOURCES% --no-debug-info --keep-broken-res --output ..\%APKNAME_NEW%_APK %ROM%\%PARTITION%\%APP_OR_PRIV-APP%\%APKNAME%\%APKNAME%.apk -p %APKTOOL%\Frameworks
+java -jar %APKTOOL%\apktool.jar d %APKTOOL_DEX% %APKTOOL_RESOURCES% --no-debug-info --keep-broken-res --output ..\%FILENAME_NEW%_DECOMPILED %INPUTDIR%\%FILEPATH% -p %APKTOOL%\Frameworks
 
-	:: Avoid cmd closing after finish to see eventual issues
+	:: Avoid closing the CMD to see potential issues
 pause

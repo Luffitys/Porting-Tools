@@ -78,10 +78,12 @@ if /I "%EXTRACT_SYSTEM_EXT%"=="y" (
 	%ZIP% x input\*.zip -oTEMP\ payload.bin -bse0 -bso0
 		:: Install Python Script Dependency
 	pip install --upgrade google-api-python-client
+	pip install bsdiff4
 		:: Decompress payload.bin
 	python3 TEMP\payload_dumper.py TEMP\payload.bin
 		:: Move .img files to TEMP\
-	move .\*.img TEMP\
+	move output\*.img TEMP\
+	rmdir /Q /S output
 
 if /I "%EXTRACT_SYSTEM%"=="y" (
 		:: Extract system.img

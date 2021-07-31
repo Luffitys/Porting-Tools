@@ -71,19 +71,13 @@ if /I "%EXTRACT_SYSTEM_EXT%"=="y" (
 	%ZIP% x -aos TEMP\system_ext.img -o%SYSTEM_EXT% -bse0 -bso0
 )
 ) else (
-		:: Copy extractor to TEMP\
-	robocopy Tools\Extractor\ TEMP\ payload_dumper.py /e /NFL /NDL /NJH /NJS
-	robocopy Tools\Extractor\ TEMP\ update_metadata_pb2.py /e /NFL /NDL /NJH /NJS
 		:: Extract payload.bin from .zip
 	%ZIP% x input\*.zip -oTEMP\ payload.bin -bse0 -bso0
-		:: Install Python Script Dependency
-	pip install --upgrade google-api-python-client
-	pip install bsdiff4
 		:: Decompress payload.bin
-	python3 TEMP\payload_dumper.py TEMP\payload.bin
+	Tools\Extractor\payload-dumper-go.exe TEMP\payload.bin -p system,vendor,system_ext,product
 		:: Move .img files to TEMP\
-	move output\*.img TEMP\
-	rmdir /Q /S output
+	mv extracted_*/* TEMP\
+	rm -rf extracted_*
 
 if /I "%EXTRACT_SYSTEM%"=="y" (
 		:: Extract system.img

@@ -73,8 +73,23 @@ if /I "%EXTRACT_SYSTEM_EXT%"=="y" (
 ) else (
 		:: Extract payload.bin from .zip
 	%ZIP% x input\*.zip -oTEMP\ payload.bin -bse0 -bso0
+if /I "%EXTRACT_ALL%"=="y" (
 		:: Decompress payload.bin
-	Tools\Extractor\payload-dumper-go.exe TEMP\payload.bin -p system,vendor,system_ext,product
+	Tools\Extractor\payload-dumper-go.exe -p system,vendor,system_ext,product TEMP\payload.bin
+) else (
+if /I "%EXTRACT_SYSTEM%"=="y" (
+	Tools\Extractor\payload-dumper-go.exe -p system TEMP\payload.bin
+)
+if /I "%EXTRACT_VENDOR%"=="y" (
+	Tools\Extractor\payload-dumper-go.exe -p vendor TEMP\payload.bin
+)
+if /I "%EXTRACT_PRODUCT%"=="y" (
+	Tools\Extractor\payload-dumper-go.exe -p product TEMP\payload.bin
+)
+if /I "%EXTRACT_SYSTEM_EXT%"=="y" (
+	Tools\Extractor\payload-dumper-go.exe -p system_ext TEMP\payload.bin
+)
+)
 		:: Move .img files to TEMP\
 	mv extracted_*/* TEMP\
 	rm -rf extracted_*

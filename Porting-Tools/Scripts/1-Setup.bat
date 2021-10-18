@@ -7,11 +7,15 @@ if /I "%EXTRACT_ALL%"=="n" (
 	set /p EXTRACT_VENDOR="Do you want to extract the vendor partition? (y/n): "
 	set /p EXTRACT_PRODUCT="Do you want to extract the product partition? (y/n): "
 	set /p EXTRACT_SYSTEM_EXT="Do you want to extract the system_ext partition? (y/n): "
+	set /p EXTRACT_CUST="Do you want to extract the cust partition? (y/n): "
+	set /p EXTRACT_ODM="Do you want to extract the odm partition? (y/n): "
 ) else (
 	set EXTRACT_SYSTEM=y
 	set EXTRACT_VENDOR=y
 	set EXTRACT_PRODUCT=y
 	set EXTRACT_SYSTEM_EXT=y
+	set EXTRACT_CUST=y
+	set EXTRACT_ODM=y
 )
 set /p INSTALL_FRAMEWORKS="Do you want to install APKTool frameworks? (y/n): "
 set /p EXTRACT_CLASSES="Do you want to extract system classes? (.EU ROM only) (y/n): "
@@ -21,6 +25,8 @@ set SYSTEM=%ROM%\system
 set VENDOR=%ROM%\vendor
 set PRODUCT=%ROM%\product
 set SYSTEM_EXT=%ROM%\system_ext
+set CUST=%ROM%\cust
+set ODM=%ROM%\odm
 set CLASSES=ROM\Classes
 set APKTOOL=Tools\APKTool
 set EXTRACTOR=Tools\Extractor
@@ -70,6 +76,26 @@ if /I "%EXTRACT_SYSTEM_EXT%"=="y" (
 		:: Extract system_ext.img
 	%ZIP% x -aos TEMP\system_ext.img -o%SYSTEM_EXT% -bse0 -bso0
 )
+if /I "%EXTRACT_CUST%"=="y" (
+		:: Extract cust partition from .zip
+	%ZIP% x input\*.zip -oTEMP\ cust.new.dat.br cust.transfer.list -bse0 -bso0
+		:: Convert .dat.br -> .dat
+	%Extractor%\Brotli.exe --decompress --in TEMP\cust.new.dat.br --out TEMP\cust.new.dat
+		:: Convert .dat -> .img
+	%Extractor%\sdat2Img.exe TEMP\cust.transfer.list TEMP\cust.new.dat TEMP\cust.img >nul
+		:: Extract cust.img
+	%ZIP% x -aos TEMP\cust.img -o%CUST% -bse0 -bso0
+)
+if /I "%EXTRACT_ODM%"=="y" (
+		:: Extract odm partition from .zip
+	%ZIP% x input\*.zip -oTEMP\ odm.new.dat.br odm.transfer.list -bse0 -bso0
+		:: Convert .dat.br -> .dat
+	%Extractor%\Brotli.exe --decompress --in TEMP\odm.new.dat.br --out TEMP\odm.new.dat
+		:: Convert .dat -> .img
+	%Extractor%\sdat2Img.exe TEMP\odm.transfer.list TEMP\odm.new.dat TEMP\odm.img >nul
+		:: Extract odm.img
+	%ZIP% x -aos TEMP\odm.img -o%ODM% -bse0 -bso0
+)
 ) else (
 		:: Extract payload.bin from .zip
 	%ZIP% x input\*.zip -oTEMP\ payload.bin -bse0 -bso0
@@ -88,6 +114,12 @@ if /I "%EXTRACT_PRODUCT%"=="y" (
 )
 if /I "%EXTRACT_SYSTEM_EXT%"=="y" (
 	Tools\Extractor\payload-dumper-go.exe -p system_ext TEMP\payload.bin
+)
+if /I "%EXTRACT_CUST%"=="y" (
+	Tools\Extractor\payload-dumper-go.exe -p cust TEMP\payload.bin
+)
+if /I "%EXTRACT_ODM%"=="y" (
+	Tools\Extractor\payload-dumper-go.exe -p odm TEMP\payload.bin
 )
 )
 		:: Move .img files to TEMP\
@@ -109,6 +141,14 @@ if /I "%EXTRACT_PRODUCT%"=="y" (
 if /I "%EXTRACT_SYSTEM_EXT%"=="y" (
 		:: Extract system_ext.img
 	%ZIP% x -aos TEMP\system_ext.img -o%SYSTEM_EXT% -bse0 -bso0
+)
+if /I "%EXTRACT_CUST%"=="y" (
+		:: Extract cust.img
+	%ZIP% x -aos TEMP\cust.img -o%CUST% -bse0 -bso0
+)
+if /I "%EXTRACT_ODM%"=="y" (
+		:: Extract odm.img
+	%ZIP% x -aos TEMP\odm.img -o%ODM% -bse0 -bso0
 )
 )
 
@@ -147,7 +187,10 @@ if /I "%EXTRACT_CLASSES%"=="y" (
 )
 
 	:: Cleanup
+set /p CLEANUP="Do you want to clean up the temp directory? (y/n): "
+if /I "%CLEANUP%"=="y" (
 rmdir /Q /S TEMP
+)
 
 	:: Avoid closing the CMD to see potential issues
 pause

@@ -1,7 +1,7 @@
 @echo off
 
 set /p EXTENSION="What extension does the compressed file in the .zip have? (.dat.br/.bin): "
-set /p EXTRACT_ALL="Do you want to extract all partitions? (all=system,vendor,product,system_ext):(y/n): "
+set /p EXTRACT_ALL="Do you want to extract all partitions? (all=system,vendor,product,system_ext,cust,odm):(y/n): "
 if /I "%EXTRACT_ALL%"=="n" (
 	set /p EXTRACT_SYSTEM="Do you want to extract the system partition? (y/n): "
 	set /p EXTRACT_VENDOR="Do you want to extract the vendor partition? (y/n): "

@@ -1,10 +1,5 @@
-*-Tools/input-zip/*.zip
-*-Tools/ROM*/
-*-Tools/TEMP/
-*-Tools/Scripts/logs.txt
-*-Tools/Tools/APKTool/Frameworks/*.apk
-*-Tools/input/*.zip
-
-*_DECOMPILED/
-
-*_Magisk/
+Porting-Tools/Scripts/log.txt
+Porting-Tools/input
+Porting-Tools/Tools/apktool/Frameworks
+out
+.vscode

@@ -46,12 +46,17 @@ java -jar "%APKTOOL%\apktool.jar" b %COMPILE_WITH_AAPT2% %COPY_ORIGINAL_MANIFEST
 
 java -jar "%APKSIGNER%\apksigner.jar" -a "%FILEOUTPUT%\%FILENAME%.apk" --overwrite
 
+if exist "%FILEOUTPUT%\%FILENAME%.apk.idsig" (
 del "%FILEOUTPUT%\%FILENAME%.apk.idsig"
+)
 
 if /I "%REQUIRES_MAGISK_MODULE%"=="y" (
-	del "out\%FILENAME%_Magisk\*.zip"
-	%ZIP% a "out\%FILENAME%_Magisk\%ZIPNAME%.zip" -r "out\%FILENAME%_Magisk\*" -mx%ZIP_COMPRESSION_LEVEL%
-	%ADB% push "out\%FILENAME%_Magisk\%ZIPNAME%.zip" /sdcard/
+	cd "out\%FILENAME%_Magisk"
+	if exist "..\%ZIPNAME%.zip" (
+		del "..\%ZIPNAME%.zip"
+	)
+	..\..\%ZIP% a "..\%ZIPNAME%.zip" ".\*" -mx%ZIP_COMPRESSION_LEVEL%
+	..\..\%ADB% push "..\%ZIPNAME%.zip" /sdcard/
 ) else (
 	%ADB% install -r "%FILEOUTPUT%\%FILENAME%.apk"
 )
